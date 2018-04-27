@@ -131,7 +131,7 @@ def create_task():
     	canpro = request.json["CantPrecio"]
          
     	task = {
-		'Empresa': nom,
+    		'Empresa': nom,
     		'Sucursal': suc,
     		'fVigencia': fVig,
     		'CantPrecio': canpro
@@ -144,7 +144,7 @@ def create_task():
     		cur.execute("insert into Empresas (nombre,Sucursal,fVigencia,CantPrecio) values ('%s','%s','%s',%d);" % (nom,suc,fVig,canpro))
     		conn.commit()
     	except:
-		conn.rollback()
+    		conn.rollback()
         
     	cur.close()
     	conn.close()
