@@ -119,45 +119,39 @@ def create_task():
 	if  not request.json["Pass"] == "352f4687e5e0f066441ea891063bb14e":
 		abort(400)
 	if 'CantPrecio' in request.json and type(request.json['CantPrecio']) != int:
-        	abort(400)
-	
-     """or not 'fVigencia' in request.json or not 'CantPrecio' in request.json:
-        abort(400)"""
-	
-	
-	
+        	abort(400)	
     
 	nom = request.json["Empresa"]
 	suc = request.json["Sucursal"]
 	
-	task = [task for task in tasks if ( task['Empresa'] == nom and task['Sucursal'] == suc )]
+	#task = [task for task in tasks if ( task['Empresa'] == nom and task['Sucursal'] == suc )]
 	
-	if len(task) == 0:
-		fVig = request.json["fVigencia"]
-		canpro = request.json["CantPrecio"]
-    
-		task = {
-			'Empresa': nom,
-			'Sucursal': suc,
-			'fVigencia': fVig,
-			'CantPrecio': canpro
-		}    
-		tasks.append(task)
+	#if len(task) == 0:
+	fVig = request.json["fVigencia"]
+	canpro = request.json["CantPrecio"]
 
-		conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
+	task = {
+		'Empresa': nom,
+		'Sucursal': suc,
+		'fVigencia': fVig,
+		'CantPrecio': canpro
+	}    
+	tasks.append(task)
 
-		cur = conn.cursor()
+	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
 
-		try:    
-			cur.execute("insert into Empresas (nombre,Sucursal,fVigencia,CantPrecio) values ('%s','%s','%s',%d);" % (nom,suc,fVig,canpro))
-			conn.commit()
-		except:
-			conn.rollback()
+	cur = conn.cursor()
 
-		cur.close()
-		conn.close()
+	try:    
+		cur.execute("insert into Empresas (nombre,Sucursal,fVigencia,CantPrecio) values ('%s','%s','%s',%d);" % (nom,suc,fVig,canpro))
+		conn.commit()
+	except:
+		conn.rollback()
 
-		return jsonify({'task': task}), 201
+	cur.close()
+	conn.close()
+
+	return jsonify({'task': task}), 201
 	"""else:
 		task[0]['fVigencia'] = request.json.get('fVigencia', task[0]['fVigencia'])
 		task[0]['CantPrecio'] = request.json.get('CantPrecio', task[0]['CantPrecio'])    
