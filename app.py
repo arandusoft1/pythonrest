@@ -124,32 +124,48 @@ def create_task():
     nom = request.json["Empresa"]
     suc = request.json["Sucursal"]
     
-    #task = [task for task in tasks if ( task['Empresa'] == nom and task['Sucursal'] == suc )]
+    task = [task for task in tasks if ( task['Empresa'] == nom and task['Sucursal'] == suc )]
     	
-    #if len(task) == 0:
-    fVig = request.json["fVigencia"]
-    canpro = request.json["CantPrecio"]
-    
-    task = {
-    	'Empresa': nom,
-    	'Sucursal': suc,
-    	'fVigencia': fVig,
-    	'CantPrecio': canpro
-    }
-    tasks.append(task)
-    conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
-    cur = conn.cursor()
-    
-    try:
-    	cur.execute("insert into Empresas (nombre,Sucursal,fVigencia,CantPrecio) values ('%s','%s','%s',%d);" % (nom,suc,fVig,canpro))
-    	conn.commit()
-    except:
-    	conn.rollback()
-    
-    cur.close()
-    conn.close()
-    
-    return jsonify({'task': task}), 201
+    if len(task) == 0:
+    	fVig = request.json["fVigencia"]
+    	canpro = request.json["CantPrecio"]
+         
+    	task = {
+		'Empresa': nom,
+    		'Sucursal': suc,
+    		'fVigencia': fVig,
+    		'CantPrecio': canpro
+    	}
+    	tasks.append(task)
+    	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
+    	cur = conn.cursor()
+        
+    	try:
+    		cur.execute("insert into Empresas (nombre,Sucursal,fVigencia,CantPrecio) values ('%s','%s','%s',%d);" % (nom,suc,fVig,canpro))
+    		conn.commit()
+    	except:
+		conn.rollback()
+        
+    	cur.close()
+    	conn.close()
+        
+    	return jsonify({'task': task}), 201
+    else:
+    	task[0]['fVigencia'] = request.json.get('fVigencia', task[0]['fVigencia'])
+    	task[0]['CantPrecio'] = request.json.get('CantPrecio', task[0]['CantPrecio'])    
+        
+    	fVig = task[0]['fVigencia']
+    	canpro = task[0]['CantPrecio']  
+    	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
+    	cur = conn.cursor()        
+    	try:
+    		cur.execute("update Empresas set fVigencia='%s', CantPrecio=%d where nombre='%s' and sucursal ='%s' ;" % (fVig,canpro,nom,suc))
+    		conn.commit() 
+    	except(Exception, psycopg2.DatabaseError) as error:
+    		conn.rollback()
+    	cur.close()
+    	conn.close()
+    	return jsonify({'task': task[0]})"""
 
 #######################################################################################################################################
 
