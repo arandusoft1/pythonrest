@@ -158,7 +158,7 @@ def create_task():
 		conn.close()
 
 		return jsonify({'task': task}), 201
-	else:
+	"""else:
 		task[0]['fVigencia'] = request.json.get('fVigencia', task[0]['fVigencia'])
 		task[0]['CantPrecio'] = request.json.get('CantPrecio', task[0]['CantPrecio'])    
     
@@ -177,7 +177,7 @@ def create_task():
 
 		cur.close()
 		conn.close()
-		return jsonify({'task': task[0]})
+		return jsonify({'task': task[0]})"""
 
 #######################################################################################################################################
 
