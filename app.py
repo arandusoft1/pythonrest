@@ -1,38 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-from flask import Flask, jsonify, abort, request, make_response, url_for
-from flask_httpauth import HTTPBasicAuth
-
-app = Flask(__name__, static_url_path = "")
-auth = HTTPBasicAuth()
-
-@auth.get_password
-def get_password(username):
-    if username == 'miguel':
-        return 'python'
-    return None
-
-@auth.error_handler
-def unauthorized():
-    return make_response(jsonify( { 'error': 'Unauthorized access' } ), 403)
-    # return 403 instead of 401 to prevent browsers from displaying the default auth dialog
-
-@app.errorhandler(400)
-def not_found(error):
-    return make_response(jsonify( { 'error': 'Bad request' } ), 400)
-
-@app.errorhandler(404)
-def not_found(error):
-    return make_response(jsonify( { 'error': 'Not found' } ), 404)
-
-
-@auth.login_required
-
-11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
-
-
-# -*- coding: UTF-8 -*-
-
 from flask import Flask, jsonify, abort, request, make_response, url_for, render_template
 from flask_httpauth import HTTPBasicAuth
 from datetime import datetime
@@ -43,19 +10,6 @@ import json
 
 
 app = Flask(__name__, static_url_path = "")
-auth = HTTPBasicAuth()
-
-@auth.get_password
-def get_password(username):
-    if username == 'arandusoft':
-        return 'python'
-    return None
-
-@auth.error_handler
-def unauthorized():
-    return make_response(jsonify( { 'error': 'Unauthorized access' } ), 403)
-    # return 403 instead of 401 to prevent browsers from displaying the default auth dialog
-
 
 connjson = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
 conjson = connjson.cursor()
@@ -135,7 +89,6 @@ def index():
 	##return template('tabla.tpl', leer)
 #####################################################################################################################################
 
-
 @app.route('/empresas', methods=['GET'])
 def get_tasks():
     return jsonify({'Empresas': tasks})
@@ -159,40 +112,72 @@ def get_task(task_nom, task_suc):
     return jsonify({'task': task[0]})"""
 
 ######################################################################################################################################
-
-
 @app.route('/empresas', methods=['POST'])
 def create_task():
-    if not request.json or not 'Empresa' in request.json or not 'Sucursal' in request.json or not 'fVigencia' in request.json or not 'CantPrecio' in request.json:
-        abort(400)
-        
-    nom = request.json["Empresa"]
-    suc = request.json["Sucursal"]
-    fVig = request.json["fVigencia"]
-    canpro = request.json["CantPrecio"]
+    	if not request.json or not 'Empresa' in request.json or not 'Sucursal' in request.json or not 'Pass' in request.json:
+		abort(400)
+	if  not request.json["Pass"] == "352f4687e5e0f066441ea891063bb14e":
+		abort(400)
+	if 'CantPrecio' in request.json and type(request.json['CantPrecio']) != int:
+        	abort(400)
+	
+     """or not 'fVigencia' in request.json or not 'CantPrecio' in request.json:
+        abort(400)"""
+	
+	
+	
     
-    task = {
-        'Empresa': nom,
-        'Sucursal': suc,
-        'fVigencia': fVig,
-        'CantPrecio': canpro
-    }    
-    tasks.append(task)
+	nom = request.json["Empresa"]
+	suc = request.json["Sucursal"]
+	
+	task = [task for task in tasks if ( task['Empresa'] == nom and task['Sucursal'] == suc )]
+	
+	if len(task) == 0:
+		fVig = request.json["fVigencia"]
+		canpro = request.json["CantPrecio"]
     
-    conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
+		task = {
+			'Empresa': nom,
+			'Sucursal': suc,
+			'fVigencia': fVig,
+			'CantPrecio': canpro
+		}    
+		tasks.append(task)
+
+		conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
+
+		cur = conn.cursor()
+
+		try:    
+			cur.execute("insert into Empresas (nombre,Sucursal,fVigencia,CantPrecio) values ('%s','%s','%s',%d);" % (nom,suc,fVig,canpro))
+			conn.commit()
+		except:
+			conn.rollback()
+
+		cur.close()
+		conn.close()
+
+		return jsonify({'task': task}), 201
+	else:
+		task[0]['fVigencia'] = request.json.get('fVigencia', task[0]['fVigencia'])
+		task[0]['CantPrecio'] = request.json.get('CantPrecio', task[0]['CantPrecio'])    
     
-    cur = conn.cursor()
-    
-    try:    
-        cur.execute("insert into Empresas (nombre,Sucursal,fVigencia,CantPrecio) values ('%s','%s','%s',%d);" % (nom,suc,fVig,canpro))
-        conn.commit()
-    except:
-        conn.rollback()
-        
-    cur.close()
-    conn.close()
-    
-    return jsonify({'task': task}), 201
+		fVig = task[0]['fVigencia']
+		canpro = task[0]['CantPrecio']  
+
+		conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
+
+		cur = conn.cursor()        
+
+		try:
+			cur.execute("update Empresas set fVigencia='%s', CantPrecio=%d where nombre='%s' and sucursal ='%s' ;" % (fVig,canpro,nom,suc))
+			conn.commit() 
+		except(Exception, psycopg2.DatabaseError) as error:
+			conn.rollback()
+
+		cur.close()
+		conn.close()
+		return jsonify({'task': task[0]})
 
 #######################################################################################################################################
 
@@ -254,7 +239,3 @@ if __name__ == '__main__':
     app.run(debug = True)
 
 #Hasta aca lo mio
-
-
-
-
