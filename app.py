@@ -114,12 +114,12 @@ def get_task(task_nom, task_suc):
 ######################################################################################################################################
 @app.route('/empresas', methods=['POST'])
 def create_task():
-    	if not request.json or not 'Empresa' in request.json or not 'Sucursal' in request.json or not 'Pass' in request.json:
-		abort(400)
-	if  not request.json["Pass"] == "352f4687e5e0f066441ea891063bb14e":
-		abort(400)
-	if 'CantPrecio' in request.json and type(request.json['CantPrecio']) != int:
-        	abort(400)	
+    if not request.json or not 'Empresa' in request.json or not 'Sucursal' in request.json or not 'Pass' in request.json:
+    	abort(400)
+    if  not request.json["Pass"] == "352f4687e5e0f066441ea891063bb14e":
+    	abort(400)
+    if 'CantPrecio' in request.json and type(request.json['CantPrecio']) != int:
+    	abort(400)	
         
     nom = request.json["Empresa"]
     suc = request.json["Sucursal"]
