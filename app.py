@@ -163,15 +163,14 @@ def create_task():
     	connpost.close()
         
     	return jsonify({'task': task}), 201
-    else:		
-	task[0]['fVigencia'] = request.json.get('fVigencia', task[0]['fVigencia'])
-	task[0]['CantPrecio'] = request.json.get('CantPrecio', task[0]['CantPrecio'])
-	fVig = task[0]['fVigencia']
-	canpro = task[0]['CantPrecio']
-		
+    else:
+    	task[0]['fVigencia'] = request.json.get('fVigencia', task[0]['fVigencia'])
+    	task[0]['CantPrecio'] = request.json.get('CantPrecio', task[0]['CantPrecio'])    
+        
+    	fVig = task[0]['fVigencia']
+    	canpro = task[0]['CantPrecio']  
     	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
-    	cur = conn.cursor()    
-	
+    	cur = conn.cursor()        
     	try:
     		cur.execute("update Empresas set fVigencia='%s', CantPrecio=%d where nombre='%s' and sucursal ='%s' ;" % (fVig,canpro,nom,suc))
     		conn.commit() 
