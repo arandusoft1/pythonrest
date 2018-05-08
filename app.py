@@ -124,9 +124,19 @@ def create_task():
     nom = request.json["Empresa"]
     suc = request.json["Sucursal"]
     
-    task = [task for task in tasks if ( task['Empresa'] == nom and task['Sucursal'] == suc )]
+    #task = [task for task in tasks if ( task['Empresa'] == nom and task['Sucursal'] == suc )]
+    conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
+    con = conn.cursor()
+    con.execute("select COUNT(nombre) from Empresas where nombre = '%s' and sucursal = '%s';" % (nom, suc))
+    rows = con.fetchall()
     	
-    if len(task) == 0:
+    for row in rows:
+    	cont = row[0]
+    	
+    con.close()
+    conn.close()
+    
+    if cont == 0:
     	fVig = request.json["fVigencia"]
     	canpro = request.json["CantPrecio"]
         
