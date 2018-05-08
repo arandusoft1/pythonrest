@@ -129,12 +129,13 @@ def create_task():
     con = conn.cursor()
     con.execute("select COUNT(nombre) from Empresas where nombre = '%s' and sucursal = '%s';" % (nom, suc))
     rows = con.fetchall()
-    	
+    cont = 0
     for row in rows:
     	cont = row[0]
     	
     con.close()
     conn.close()
+    
     
     if cont == 0:
     	fVig = request.json["fVigencia"]
