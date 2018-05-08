@@ -125,6 +125,7 @@ def create_task():
     suc = request.json["Sucursal"]
     
     task = [task for task in tasks if ( task['Empresa'] == nom and task['Sucursal'] == suc )]
+	
     conn1 = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
     con1 = conn1.cursor()
     con1.execute("select COUNT(*) from Empresas where nombre ='%s' and sucursal ='%s';", (nom,suc))
@@ -163,14 +164,26 @@ def create_task():
         
     	return jsonify({'task': task}), 201
     else:
-    	task[0]['fVigencia'] = request.json.get('fVigencia', task[0]['fVigencia'])
-    	task[0]['CantPrecio'] = request.json.get('CantPrecio', task[0]['CantPrecio'])
-	task[0]['Empresa'] = request.json.get('Empresa', task[0]['Empresa'])
-	task[0]['Sucursal'] = request.json.get('Sucursal', task[0]['Sucursal'])
+	if len(task) == 0:
+		fVig = request.json["fVigencia"]
+    		canpro = request.json["CantPrecio"]
+                
+		task = {
+			'Empresa': nom,
+			'Sucursal': suc,
+			'fVigencia': fVig,
+			'CantPrecio': canpro
+		}
+		
+	else
+		task[0]['fVigencia'] = request.json.get('fVigencia', task[0]['fVigencia'])
+		task[0]['CantPrecio'] = request.json.get('CantPrecio', task[0]['CantPrecio'])
+		fVig = task[0]['fVigencia']
+		canpro = task[0]['CantPrecio']				     
+						     
 	
         
-    	fVig = task[0]['fVigencia']
-    	canpro = task[0]['CantPrecio']  
+    	  
     	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
     	cur = conn.cursor()        
     	try:
