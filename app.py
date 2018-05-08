@@ -179,7 +179,6 @@ def create_task():
     	cur.close()
     	conn.close()
     	return jsonify({'task': task[0]})
-    	
 #######################################################################################################################################
 
 @app.route('/empresas', methods=['PUT'])   # original /<task_nom>', methods=['PUT'])
