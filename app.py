@@ -7,6 +7,8 @@ import psycopg2, psycopg2.extras
 import json
 ##from app import app
 ##from sys import argv
+#import requests
+import sys
 
 
 app = Flask(__name__, static_url_path = "")
@@ -87,11 +89,282 @@ def index():
 	#leer = json.loads(open('locales.json').read())	
 	return render_template('tabla.tpl', ultact=ultact,empresas=empresas)
 	##return template('tabla.tpl', leer)
+
+
 #####################################################################################################################################
 
+@app.route('/buscarsucursal', methods=['POST'])
+def buscar():
+	"""if not 'sucursal' in request.form:
+        	abort(400)"""
+	
+	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
+	con = conn.cursor()
+	#con.execute("select * from Empresas where sucursal = '%s';" % (request.form['sucursal']))
+	con.execute("select * from Empresas;")
+	rows = con.fetchall()	
+	empresas= []
+	fmt = '%d/%m/%y %H:%M:%S'
+	ultact = "01/01/01 00:00:00"
+	d2 = datetime.strptime(ultact,fmt)
+	
+	suc = request.form['sucursal']
+	
+	for row in rows:
+		if row[2] == suc:
+			empresas.append({"Empresa": row[1],"Sucursal": row[2],"fVigencia": row[3],"CantPrecio": row[4]})
+			
+		#fvig.append({"fVigencia": row[3]})
+		d1 = datetime.strptime(row[3],fmt)		
+		diffhora= ((d1-d2).seconds)/3600.0
+		diffdias= (d1-d2).days
+		
+		if diffdias > 0:
+			d2 = d1
+			ultact = row[3]
+		elif diffdias == 0:
+			if diffhora > 0:
+				d2 = d1
+				ultact = row[3]
+				
+	if len(empresas) == 0:
+		return render_template('mensaje.tpl', mensaje= "No esta cargada la sucursal '" + suc + "'" )
+				
+	da1 = datetime.strptime(ultact,fmt) 
+	cont = 0	
+	
+	for elemento in empresas:
+				
+		if elemento["fVigencia"] == ultact:
+			empresas[cont]["color"] = "V"
+		else:
+			da2=datetime.strptime(elemento["fVigencia"],fmt)   #Elemento vigencia
+			diffseg1= ((da1-da2).seconds)/3600.0
+			diffdias1= (da1-da2).days
+		
+			if (diffseg1 > 24 or diffdias1 > 0):
+				empresas[cont]["color"] = "R"	
+			else: 
+				empresas[cont]["color"] = "A"
+		cont = cont + 1
+		
+		
+	#return repr(fvig)	
+	##leer = {"Empresas":  empresas , "UltAct": [{"fVigencia": ultact }]}		
+	
+	#leer = json.loads(open('locales.json').read())	
+	return render_template('buscarsucursal.tpl', ultact=ultact,empresas=empresas)
+	##return template('tabla.tpl', leer)
+	
+#####################################################################################################################################
+
+@app.route('/prueba')
+def prueba():
+	
+	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
+	con = conn.cursor()
+	con.execute("select * from Empresas;")
+	rows = con.fetchall()
+	empresas= []
+	fmt = '%d/%m/%y %H:%M:%S'
+	ultact = "01/01/01 00:00:00"
+	d2 = datetime.strptime(ultact,fmt)
+	
+	for row in rows:
+		empresas.append({"Empresa": row[1],"Sucursal": row[2],"fVigencia": row[3],"CantPrecio": row[4]})
+		#fvig.append({"fVigencia": row[3]})
+		d1 = datetime.strptime(row[3],fmt)		
+		diffhora= ((d1-d2).seconds)/3600.0
+		diffdias= (d1-d2).days
+		
+		if diffdias > 0:
+			d2 = d1
+			ultact = row[3]
+		elif diffdias == 0:
+			if diffhora > 0:
+				d2 = d1
+				ultact = row[3]
+				
+	da1 = datetime.strptime(ultact,fmt) 
+	cont = 0	
+	
+	for elemento in empresas:
+				
+		if elemento["fVigencia"] == ultact:
+			empresas[cont]["color"] = "V"
+		else:
+			da2=datetime.strptime(elemento["fVigencia"],fmt)   #Elemento vigencia
+			diffseg1= ((da1-da2).seconds)/3600.0
+			diffdias1= (da1-da2).days
+		
+			if (diffseg1 > 24 or diffdias1 > 0):
+				empresas[cont]["color"] = "R"	
+			else: 
+				empresas[cont]["color"] = "A"
+		cont = cont + 1
+		
+		
+	#return repr(fvig)
+	
+	##leer = {"Empresas":  empresas , "UltAct": [{"fVigencia": ultact }]}		
+	
+	#leer = json.loads(open('locales.json').read())	
+	return render_template('prueba.tpl', ultact=ultact,empresas=empresas)
+	##return template('tabla.tpl', leer)
+	
+#####################################################################################################################################
+@app.route('/UltimaVigencia')
+def Ult_Vig():
+	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
+	con = conn.cursor()
+	con.execute("select * from Empresas;")
+	rows = con.fetchall()
+	empresas= []
+	fmt = '%d/%m/%y %H:%M:%S'
+	ultact = "01/01/01 00:00:00"
+	d2 = datetime.strptime(ultact,fmt)
+	
+	for row in rows:
+		empresas.append({"Empresa": row[1],"Sucursal": row[2],"fVigencia": row[3],"CantPrecio": row[4]})
+		#fvig.append({"fVigencia": row[3]})
+		d1 = datetime.strptime(row[3],fmt)		
+		diffhora= ((d1-d2).seconds)/3600.0
+		diffdias= (d1-d2).days
+		
+		if diffdias > 0:
+			d2 = d1
+			ultact = row[3]
+		elif diffdias == 0:
+			if diffhora > 0:
+				d2 = d1
+				ultact = row[3]
+				
+	da1 = datetime.strptime(ultact,fmt) 
+	cont = 0	
+	
+	for elemento in empresas:
+				
+		if elemento["fVigencia"] == ultact:
+			empresas[cont]["color"] = "V"
+		
+		cont = cont + 1
+		
+	return render_template('ultimavigencia.tpl', ultact=ultact,empresas=empresas)
+	
+#####################################################################################################################################
+@app.route('/vigenciamenora24hs')
+def vig_menor24():
+	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
+	con = conn.cursor()
+	con.execute("select * from Empresas;")
+	rows = con.fetchall()
+	empresas= []
+	fmt = '%d/%m/%y %H:%M:%S'
+	ultact = "01/01/01 00:00:00"
+	d2 = datetime.strptime(ultact,fmt)
+	
+	for row in rows:
+		empresas.append({"Empresa": row[1],"Sucursal": row[2],"fVigencia": row[3],"CantPrecio": row[4]})
+		#fvig.append({"fVigencia": row[3]})
+		d1 = datetime.strptime(row[3],fmt)		
+		diffhora= ((d1-d2).seconds)/3600.0
+		diffdias= (d1-d2).days
+		
+		if diffdias > 0:
+			d2 = d1
+			ultact = row[3]
+		elif diffdias == 0:
+			if diffhora > 0:
+				d2 = d1
+				ultact = row[3]
+				
+	da1 = datetime.strptime(ultact,fmt) 
+	cont = 0	
+	
+	for elemento in empresas:
+		
+		if not (elemento["fVigencia"] == ultact):
+			da2=datetime.strptime(elemento["fVigencia"],fmt)   #Elemento vigencia
+			diffseg1= ((da1-da2).seconds)/3600.0
+			diffdias1= (da1-da2).days
+			
+			if not (diffseg1 > 24 or diffdias1 > 0): 
+				empresas[cont]["color"] = "A"				
+			
+		cont = cont + 1
+		
+	return render_template('vigenciamenora24hs.tpl', ultact=ultact,empresas=empresas)
+	
+#####################################################################################################################################
+@app.route('/vigenciamayora24hs')
+def vig_mayor24():
+	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
+	con = conn.cursor()
+	con.execute("select * from Empresas;")
+	rows = con.fetchall()
+	empresas= []
+	fmt = '%d/%m/%y %H:%M:%S'
+	ultact = "01/01/01 00:00:00"
+	d2 = datetime.strptime(ultact,fmt)
+	
+	for row in rows:
+		empresas.append({"Empresa": row[1],"Sucursal": row[2],"fVigencia": row[3],"CantPrecio": row[4]})
+		#fvig.append({"fVigencia": row[3]})
+		d1 = datetime.strptime(row[3],fmt)		
+		diffhora= ((d1-d2).seconds)/3600.0
+		diffdias= (d1-d2).days
+		
+		if diffdias > 0:
+			d2 = d1
+			ultact = row[3]
+		elif diffdias == 0:
+			if diffhora > 0:
+				d2 = d1
+				ultact = row[3]
+				
+	da1 = datetime.strptime(ultact,fmt) 
+	cont = 0	
+	
+	for elemento in empresas:
+		
+		if not (elemento["fVigencia"] == ultact):
+			empresas[cont]["color"] = "V"
+			da2=datetime.strptime(elemento["fVigencia"],fmt)   #Elemento vigencia
+			diffseg1= ((da1-da2).seconds)/3600.0
+			diffdias1= (da1-da2).days
+			
+			if (diffseg1 > 24 or diffdias1 > 0):
+				empresas[cont]["color"] = "R"								
+		
+		cont = cont + 1
+		
+	return render_template('vigenciamayora24hs.tpl', ultact=ultact,empresas=empresas)
+	
+#####################################################################################################################################
 @app.route('/empresas', methods=['GET'])
 def get_tasks():
     return jsonify({'Empresas': tasks})
+
+
+#####################################################################################################################################
+@app.route('/jquery.js', methods=['GET'])
+def jquery():
+    js = open ('./templates/jquery.js').read()    
+    return str(js)
+
+#####################################################################################################################################
+@app.route('/cssfriar.css', methods=['GET'])
+def cssfriar():
+    css = open ('./templates/cssfriar.css').read()    
+    return str(css)
+
+#####################################################################################################################################
+@app.route('/jquery.tablesorter.js', methods=['GET'])
+def tablesorter():
+    js = open ('./templates/jquery.tablesorter.js').read()
+    return str(js)
+
+
 
 ######################################################################################################################################
 
@@ -101,6 +374,35 @@ def get_task(task_nom):
     if len(task) == 0:
         abort(404)
     return jsonify({'Empresa': task})
+
+
+######################################################################################################################################
+
+@app.route('/ultiact', methods=['GET'])
+def ultimaact():
+		
+	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
+	con = conn.cursor()
+	con.execute("select * from Empresas;")
+	rows = con.fetchall()	
+	fmt = '%d/%m/%y %H:%M:%S'
+	ultact = "01/01/01 00:00:00"
+	d2 = datetime.strptime(ultact,fmt)
+	
+	for row in rows:		
+		d1 = datetime.strptime(row[3],fmt)		
+		diffhora= ((d1-d2).seconds)/3600.0
+		diffdias= (d1-d2).days
+		
+		if diffdias > 0:
+			d2 = d1
+			ultact = row[3]
+		elif diffdias == 0:
+			if diffhora > 0:
+				d2 = d1
+				ultact = row[3]
+        
+	return jsonify({'Ultima actualizacion': ultact})
 
 ######################################################################################################################################
 
@@ -114,76 +416,37 @@ def get_task(task_nom, task_suc):
 ######################################################################################################################################
 @app.route('/empresas', methods=['POST'])
 def create_task():
-    if not request.json or not 'Empresa' in request.json or not 'Sucursal' in request.json or not 'Pass' in request.json:
-    	abort(400)
-    if  not request.json["Pass"] == "352f4687e5e0f066441ea891063bb14e":
-    	abort(400)
-    if 'CantPrecio' in request.json and type(request.json['CantPrecio']) != int:
-    	abort(400)	
-    	
+    if not request.json or not 'Empresa' in request.json or not 'Sucursal' in request.json or not 'fVigencia' in request.json or not 'CantPrecio' in request.json:
+        abort(400)
+        
     nom = request.json["Empresa"]
     suc = request.json["Sucursal"]
-    	
+    fVig = request.json["fVigencia"]
+    canpro = request.json["CantPrecio"]
     
-    
-    task = [task for task in tasks if ( task['Empresa'] == nom and task['Sucursal'] == suc )]    
+    task = {
+        'Empresa': nom,
+        'Sucursal': suc,
+        'fVigencia': fVig,
+        'CantPrecio': canpro
+    }    
+    tasks.append(task)
     
     conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
-    con = conn.cursor()
-    con.execute("select COUNT(*) from Empresas where nombre='%s' and Sucursal='%s';" % (nom,suc))
-    rows = con.fetchall()
-    cont = 0
     
-    for row in rows:
-    	cont = row[0]
+    cur = conn.cursor()
     
+    try:    
+        cur.execute("insert into Empresas (nombre,Sucursal,fVigencia,CantPrecio) values ('%s','%s','%s',%d);" % (nom,suc,fVig,canpro))
+        conn.commit()
+    except:
+        conn.rollback()
+        
+    cur.close()
+    conn.close()
     
-    if cont == 0:
-    	fVig = request.json["fVigencia"]
-    	canpro = request.json["CantPrecio"]
-        
-    	task = {
-    		'Empresa': nom,
-    		'Sucursal': suc,
-    		'fVigencia': fVig,
-    		'CantPrecio': canpro
-    	}
-    	tasks.append(task)
-    	connpost = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
-    	curpost = connpost.cursor()
-        
-    	try:
-    		curpost.execute("insert into Empresas (nombre,Sucursal,fVigencia,CantPrecio) values ('%s','%s','%s',%d);" % (nom,suc,fVig,canpro))
-    		connpost.commit()
-    	except:
-    		connpost.rollback()
-    	
-    	curpost.close()
-    	connpost.close()
-        
-    	return jsonify({'task': task}), 201
-    else:
-    	fVig = request.json["fVigencia"]
-    	canpro = request.json["CantPrecio"]
-        
-    	task = {
-    		'Empresa': nom,
-    		'Sucursal': suc,
-    		'fVigencia': fVig,
-    		'CantPrecio': canpro
-    	}
-    	tasks.append(task) 
-    	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
-    	cur = conn.cursor()        
-    	try:
-    		cur.execute("update Empresas set fVigencia='%s', CantPrecio=%d where nombre='%s' and sucursal ='%s' ;" % (fVig,canpro,nom,suc))
-    		conn.commit() 
-    	except(Exception, psycopg2.DatabaseError) as error:
-    		conn.rollback()
-    	cur.close()
-    	conn.close()
-    	return jsonify({'task': task}), 201
-    
+    return jsonify({'task': task}), 201
+
 #######################################################################################################################################
 
 @app.route('/empresas', methods=['PUT'])   # original /<task_nom>', methods=['PUT'])
