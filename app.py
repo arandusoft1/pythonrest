@@ -164,17 +164,18 @@ def create_task():
         
     	return jsonify({'task': task}), 201
     else:
+			
+	if len(task) == 0:
+		fVig = request.json["fVigencia"]
+    	        canpro = request.json["CantPrecio"]
 		
-	fVig = request.json["fVigencia"]
-    	canpro = request.json["CantPrecio"]
-	
-	if len(task) == 0:                
 		task = {
 			'Empresa': nom,
 			'Sucursal': suc,
 			'fVigencia': fVig,
 			'CantPrecio': canpro
 		}
+		tasks.append(task)
 		
 	else
 		task[0]['fVigencia'] = request.json.get('fVigencia', task[0]['fVigencia'])
