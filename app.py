@@ -183,7 +183,7 @@ def create_task():
     		conn.rollback()
     	cur.close()
     	conn.close()
-    	return jsonify({'task': task}), 201
+    	return jsonify({'task': task})
     	
 #######################################################################################################################################
 
