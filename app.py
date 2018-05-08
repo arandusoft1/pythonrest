@@ -163,21 +163,7 @@ def create_task():
     	connpost.close()
         
     	return jsonify({'task': task}), 201
-    else:
-			
-	"""if len(task) == 0:
-		fVig = request.json["fVigencia"]
-    	        canpro = request.json["CantPrecio"]
-		
-		task = {
-			'Empresa': nom,
-			'Sucursal': suc,
-			'fVigencia': fVig,
-			'CantPrecio': canpro
-		}
-		tasks.append(task)
-		
-	else"""
+    else:		
 	task[0]['fVigencia'] = request.json.get('fVigencia', task[0]['fVigencia'])
 	task[0]['CantPrecio'] = request.json.get('CantPrecio', task[0]['CantPrecio'])
 	fVig = task[0]['fVigencia']
