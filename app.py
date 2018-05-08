@@ -128,12 +128,12 @@ def create_task():
     	
     conn1 = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
     con1 = conn1.cursor()
-    con1.execute("select COUNT(*) from Empresas where nombre ='%s' and sucursal ='%s';", (nom,suc))
+    con1.execute("select * from Empresas where nombre ='%s' and sucursal ='%s';", (nom,suc))
     rows = con1.fetchall()
     cont = 0
     
     for row in rows:
-    	cont = row[0]
+    	cont = cont + 1
     	
     con1.close()
     conn1.close()
