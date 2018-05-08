@@ -164,15 +164,16 @@ def create_task():
         
     	return jsonify({'task': task}), 201
     else:
-	fVig = request.json["fVigencia"]
+    	fVig = request.json["fVigencia"]
     	canpro = request.json["CantPrecio"]
-	task = {
+        
+    	task = {
     		'Empresa': nom,
     		'Sucursal': suc,
     		'fVigencia': fVig,
     		'CantPrecio': canpro
     	}
-    	tasks.append(task)
+    	tasks.append(task)  
     	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
     	cur = conn.cursor()        
     	try:
