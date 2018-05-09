@@ -41,7 +41,7 @@ def index():
 	
 	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
 	con = conn.cursor()
-	con.execute("select * from Empresas;")
+	con.execute("select * from Empresas ORDER BY nombre,Sucursal;")
 	rows = con.fetchall()
 	empresas= []
 	fmt = '%d/%m/%y %H:%M:%S'
@@ -101,7 +101,7 @@ def buscar():
 	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
 	con = conn.cursor()
 	#con.execute("select * from Empresas where sucursal = '%s';" % (request.form['sucursal']))
-	con.execute("select * from Empresas;")
+	con.execute("select * from Empresas ORDER BY nombre,Sucursal;")
 	rows = con.fetchall()	
 	empresas= []
 	fmt = '%d/%m/%y %H:%M:%S'
@@ -163,7 +163,7 @@ def prueba():
 	
 	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
 	con = conn.cursor()
-	con.execute("select * from Empresas;")
+	con.execute("select * from Empresas ORDER BY nombre,Sucursal;")
 	rows = con.fetchall()
 	empresas= []
 	fmt = '%d/%m/%y %H:%M:%S'
@@ -217,7 +217,7 @@ def prueba():
 def Ult_Vig():
 	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
 	con = conn.cursor()
-	con.execute("select * from Empresas;")
+	con.execute("select * from Empresas ORDER BY nombre,Sucursal;")
 	rows = con.fetchall()
 	empresas= []
 	fmt = '%d/%m/%y %H:%M:%S'
@@ -256,7 +256,7 @@ def Ult_Vig():
 def vig_menor24():
 	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
 	con = conn.cursor()
-	con.execute("select * from Empresas;")
+	con.execute("select * from Empresas ORDER BY nombre,Sucursal;")
 	rows = con.fetchall()
 	empresas= []
 	fmt = '%d/%m/%y %H:%M:%S'
@@ -300,7 +300,7 @@ def vig_menor24():
 def vig_mayor24():
 	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
 	con = conn.cursor()
-	con.execute("select * from Empresas;")
+	con.execute("select * from Empresas ORDER BY nombre,Sucursal;")
 	rows = con.fetchall()
 	empresas= []
 	fmt = '%d/%m/%y %H:%M:%S'
@@ -383,7 +383,7 @@ def ultimaact():
 		
 	conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
 	con = conn.cursor()
-	con.execute("select * from Empresas;")
+	con.execute("select * from Empresas ORDER BY nombre,Sucursal;")
 	rows = con.fetchall()	
 	fmt = '%d/%m/%y %H:%M:%S'
 	ultact = "01/01/01 00:00:00"
