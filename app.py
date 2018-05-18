@@ -497,7 +497,7 @@ def create_task():
     	    	conn.close()
     	    	return jsonify({'task': task}), 201
     else:
-    	return jsonify({'task': "ya existe una fecha con mayor vigente"}), 201
+    	return jsonify({'task': 'ya existe una fecha con mayor vigente'}), 201
 #######################################################################################################################################
 
 @app.route('/empresas', methods=['PUT'])   # original /<task_nom>', methods=['PUT'])
