@@ -451,31 +451,31 @@ def create_task():
          
     	
     if bandera == 'True':
-    	    if cont == 0:
-    	    	fVig = request.json["fVigencia"]
-    	    	canpro = request.json["CantPrecio"]
+    	if cont == 0:
+    		fVig = request.json["fVigencia"]
+    		canpro = request.json["CantPrecio"]
                 
-    	    	task = {
-    	    		'Empresa': nom,
-    	    		'Sucursal': suc,
-    	    		'fVigencia': fVig,
-    	    		'CantPrecio': canpro
-    	    	}
-    	    	tasks.append(task)
-    	    	connpost = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
-    	    	curpost = connpost.cursor()
+    		task = {
+    			'Empresa': nom,
+    			'Sucursal': suc,
+    			'fVigencia': fVig,
+    			'CantPrecio': canpro
+    		}
+    		tasks.append(task)
+    		connpost = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
+    		curpost = connpost.cursor()
                 
-    	     	try:
-    	     		curpost.execute("insert into Empresas (nombre,Sucursal,fVigencia,CantPrecio) values ('%s','%s','%s',%d);" % (nom,suc,fVig,canpro))
-    	     		connpost.commit()
-    	     	except:
-    	     		connpost.rollback()
+    		try:
+    			curpost.execute("insert into Empresas (nombre,Sucursal,fVigencia,CantPrecio) values ('%s','%s','%s',%d);" % (nom,suc,fVig,canpro))
+    			connpost.commit()
+    		except:
+    			connpost.rollback()
                 
-    	    	curpost.close()
-    	    	connpost.close()
+    		curpost.close()
+     		connpost.close()
                 
-    	    	return jsonify({'task': task}), 201
-    	    else:
+    		return jsonify({'task': task}), 201
+    	else:
     	    	fVig = request.json["fVigencia"]
     	    	canpro = request.json["CantPrecio"]
                 
@@ -497,7 +497,16 @@ def create_task():
     	    	conn.close()
     	    	return jsonify({'task': task}), 201
     else:
-    	return jsonify({'task': {'Info':'ya existe una fecha con mayor vigente'}}), 201
+    	fVig = request.json["fVigencia"]
+    	canpro = request.json["CantPrecio"]
+        
+    	task = {
+    		'Empresa': nom,
+    		'Sucursal': suc,
+    		'fVigencia': fVig,
+    		'CantPrecio': canpro
+    	}
+    	return jsonify({'task': task}), 201
 #######################################################################################################################################
 
 @app.route('/empresas', methods=['PUT'])   # original /<task_nom>', methods=['PUT'])
