@@ -438,8 +438,8 @@ def create_task():
     cont = 0
     
     fmt = '%d/%m/%y %H:%M:%S'
-    ultact = "01/01/01 00:00:00"
-    d2 = datetime.strptime(request.json["fVigencia"],fmt)
+    ultact = request.json["fVigencia"]   
+    d2 = datetime.strptime(ultact,fmt)
     bandera = 'True'
     	
     for row in rows:
