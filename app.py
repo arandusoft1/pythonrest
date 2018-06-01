@@ -87,6 +87,8 @@ def index():
 	##leer = {"Empresas":  empresas , "UltAct": [{"fVigencia": ultact }]}		
 	
 	#leer = json.loads(open('locales.json').read())	
+	con.close()
+	conn.close()
 	return render_template('tabla.tpl', ultact=ultact,empresas=empresas)
 	##return template('tabla.tpl', leer)
 
@@ -153,6 +155,8 @@ def buscar():
 	##leer = {"Empresas":  empresas , "UltAct": [{"fVigencia": ultact }]}		
 	
 	#leer = json.loads(open('locales.json').read())	
+	con.close()
+	conn.close()
 	return render_template('buscarsucursal.tpl', ultact=ultact,empresas=empresas)
 	##return template('tabla.tpl', leer)
 	
@@ -208,7 +212,9 @@ def prueba():
 	
 	##leer = {"Empresas":  empresas , "UltAct": [{"fVigencia": ultact }]}		
 	
-	#leer = json.loads(open('locales.json').read())	
+	#leer = json.loads(open('locales.json').read())
+	con.close()
+	conn.close()
 	return render_template('prueba.tpl', ultact=ultact,empresas=empresas)
 	##return template('tabla.tpl', leer)
 	
@@ -248,7 +254,9 @@ def Ult_Vig():
 			empresas[cont]["color"] = "V"
 		
 		cont = cont + 1
-		
+	
+	con.close()
+	conn.close()
 	return render_template('ultimavigencia.tpl', ultact=ultact,empresas=empresas)
 	
 #####################################################################################################################################
@@ -292,7 +300,8 @@ def vig_menor24():
 				empresas[cont]["color"] = "A"				
 			
 		cont = cont + 1
-		
+	con.close()
+	conn.close()
 	return render_template('vigenciamenora24hs.tpl', ultact=ultact,empresas=empresas)
 	
 #####################################################################################################################################
@@ -337,7 +346,9 @@ def vig_mayor24():
 				empresas[cont]["color"] = "R"								
 		
 		cont = cont + 1
-		
+         
+	con.close()
+	conn.close()
 	return render_template('vigenciamayora24hs.tpl', ultact=ultact,empresas=empresas)
 	
 #####################################################################################################################################
@@ -402,6 +413,8 @@ def ultimaact():
 				d2 = d1
 				ultact = row[3]
         
+	con.close()
+	conn.close()
 	return jsonify({'Ultima actualizacion': ultact})
 
 ######################################################################################################################################
@@ -447,7 +460,9 @@ def create_task():
     	
     	if d2 < d1:
     		bandera = 'False'
-    	
+    		
+    con.close()
+    conn.close()
     if bandera == 'True':    	
     	
     	if cont == 0:
