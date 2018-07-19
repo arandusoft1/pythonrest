@@ -452,13 +452,15 @@ def create_task():
     fmt = '%d/%m/%y %H:%M:%S'
     ultact = request.json["fVigencia"]
     d2 = datetime.strptime(ultact,fmt)
-    bandera = 'True'	
+    bandera = 'True'
+    d3 = datetime.now()
     
+	
     for row in rows:
     	cont = cont + 1
     	d1 = datetime.strptime(row[3],fmt)
     	
-    	if d2 < d1:
+    	if d2 < d1 or d3 < d2:
     		bandera = 'False'
     		
     con.close()
