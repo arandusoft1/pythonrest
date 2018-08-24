@@ -523,7 +523,7 @@ def create_task():
     		'CantPrecio': canpro
     	}
     	#curpost.close()
-    	connpost.close()
+    	#connpost.close()
     	return jsonify({'task': task}), 201		
 		
 #######################################################################################################################################
