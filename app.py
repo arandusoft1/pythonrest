@@ -522,7 +522,7 @@ def create_task():
     		'fVigencia': fVig,
     		'CantPrecio': canpro
     	}
-    	curpost.close()
+    	#curpost.close()
     	connpost.close()
     	return jsonify({'task': task}), 201		
 		
