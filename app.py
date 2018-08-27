@@ -471,7 +471,7 @@ def create_task():
     	if cont == 0:
     		fVig = request.json["fVigencia"]
     		canpro = request.json["CantPrecio"]
-        
+                
     		task = {
     			'Empresa': nom,
     			'Sucursal': suc,
