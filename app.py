@@ -479,7 +479,6 @@ def create_task():
     			'CantPrecio': canpro
     		}
     		print (task)
-    		print (nom)
     		sys.stdout.write('aaaaa')
     		tasks.append(task)
     		connpost = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
@@ -506,7 +505,6 @@ def create_task():
     			'CantPrecio': canpro
     		}
     		print (task)
-     		print (nom)
     		tasks.append(task) 
     		conn = psycopg2.connect(database='d3fkm1msg7kiub',user='wdtetudvoejjev',password='b7fefda1a504e80018b763ba3d8bcb94804c54dfff9a3372b4a70ee042dadf22', host='ec2-54-83-1-94.compute-1.amazonaws.com')
     		cur = conn.cursor()        
@@ -529,7 +527,6 @@ def create_task():
     		'CantPrecio': canpro
     	}
     	print (task)
-    	print (nom)
     	#curpost.close()
     	#connpost.close()
     	return jsonify({'task': task}), 201		
