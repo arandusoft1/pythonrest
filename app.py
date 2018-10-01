@@ -467,7 +467,7 @@ def create_task():
     con.close()
     conn.close()
     fVig = request.json["fVigencia"]
-    if fVig.capitalize().count(".") = 2:
+    if fVig.capitalize().count(".") == 2:
     	fVig = fVig.replace(".", "/")
     	
     if bandera == 'True':    	
