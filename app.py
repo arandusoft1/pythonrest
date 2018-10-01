@@ -473,7 +473,7 @@ def create_task():
     if bandera == 'True':    	
     	
     	if cont == 0:
-    		fVig = request.json["fVigencia"]
+    		#fVig = request.json["fVigencia"]
     		canpro = request.json["CantPrecio"]
                 
     		task = {
@@ -499,7 +499,7 @@ def create_task():
         	
     		return jsonify({'task': task}), 201
     	else:
-    		fVig = request.json["fVigencia"]
+    		#fVig = request.json["fVigencia"]
     		canpro = request.json["CantPrecio"]
         	
     		task = {
@@ -521,7 +521,7 @@ def create_task():
     		conn.close()
     		return jsonify({'task': task}), 201    
     else:
-    	fVig = request.json["fVigencia"]
+    	#fVig = request.json["fVigencia"]
     	canpro = request.json["CantPrecio"]
         	
     	task = {
