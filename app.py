@@ -451,7 +451,13 @@ def create_task():
     cont = 0
     
     fmt = '%d/%m/%y %H:%M:%S'
-    ultact = request.json["fVigencia"]
+    
+    
+    fVig = request.json["fVigencia"]
+    if fVig.capitalize().count(".") == 2:
+    	fVig = fVig.replace(".", "/")
+    
+    ultact = fVig
     d2 = datetime.strptime(ultact,fmt)
     bandera = 'True'
     d3 = datetime.now()
@@ -466,9 +472,9 @@ def create_task():
     		
     con.close()
     conn.close()
-    fVig = request.json["fVigencia"]
-    if fVig.capitalize().count(".") == 2:
-    	fVig = fVig.replace(".", "/")
+    #fVig = request.json["fVigencia"]
+    #if fVig.capitalize().count(".") == 2:
+    #	fVig = fVig.replace(".", "/")
     	
     if bandera == 'True':    	
     	
